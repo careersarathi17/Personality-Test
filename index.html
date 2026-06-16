@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-Depth Personality Test | Assessment Platform</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-muted);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Question Layout */
+        .question-card {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+
+        .option-label input {
+            margin-bottom: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Results Display */
+        .candidate-meta {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .trait-result {
+            margin-bottom: 25px;
+        }
+
+        .trait-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar-bg {
+            background: var(--border);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+
+        .trait-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .options-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .option-label {
+                flex-direction: row;
+                gap: 15px;
+                text-align: left;
+            }
+            .option-label input {
+                margin-bottom: 0;
+            }
+            .candidate-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>In-Depth Personality Assessment</h1>
+        <p>Complete the profile and answer honestly to obtain an instant psychological evaluation.</p>
+    </header>
+
+    <!-- STEP 1: Registration Form -->
+    <div id="step-registration" class="section active">
+        <div class="form-group">
+            <label for="candidate-name">Full Name</label>
+            <input type="text" id="candidate-name" placeholder="John Doe" required>
+        </div>
+        <div class="form-group">
+            <label for="candidate-age">Age</label>
+            <input type="number" id="candidate-age" placeholder="25" min="1" required>
+        </div>
+        <div class="form-group">
+            <label for="candidate-gender">Gender</label>
+            <select id="candidate-gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Non-binary">Non-binary</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="candidate-occupation">Occupation / Target Role</label>
+            <input type="text" id="candidate-occupation" placeholder="Software Engineer / Applicant" required>
+        </div>
+        <button class="btn" onclick="startAssessment()">Start Assessment</button>
+    </div>
+
+    <!-- STEP 2: Assessment Grid -->
+    <div id="step-quiz" class="section">
+        <form id="quiz-form">
+            <div id="questions-target"></div>
+            <button type="button" class="btn" onclick="processResults()">Submit Test & View Results</button>
+        </form>
+    </div>
+
+    <!-- STEP 3: Instant Dashboard Results -->
+    <div id="step-results" class="section">
+        <h2>Assessment Report</h2>
+        <div class="candidate-meta">
+            <div><strong>Candidate Name:</strong> <span id="res-name"></span></div>
+            <div><strong>Age:</strong> <span id="res-age"></span></div>
+            <div><strong>Gender:</strong> <span id="res-gender"></span></div>
+            <div><strong>Occupation/Role:</strong> <span id="res-occupation"></span></div>
+        </div>
+
+        <div id="results-target"></div>
+
+        <button class="btn" onclick="window.print()">Print / Save PDF Report</button>
+        <button class="btn" style="background-color: var(--text-muted); margin-top: 10px;" onclick="location.reload()">Restart Test</button>
+    </div>
+</div>
+
+<script>
+    // Comprehensive psychometric framework mapped directly to the Big Five (OCEAN)
+    const questions = [
+        // Openness to Experience
+        { id: 1, trait: 'O', text: 'I have a vibrant imagination and enjoy exploring abstract, creative concepts.', reverse: false },
+        { id: 2, trait: 'O', text: 'I generally prefer dealing with structured, familiar routines over unpredictable variety.', reverse: true },
+        { id: 3, trait: 'O', text: 'I love discovering new artistic expressions, ideas, or complex intellectual theories.', reverse: false },
+        
+        // Conscientiousness
+        { id: 4, trait: 'C', text: 'I systematically organize my tasks and come completely prepared to environments.', reverse: false },
+        { id: 5, trait: 'C', text: 'I frequently find myself leaving objectives unfinished or delaying timelines.', reverse: true },
+        { id: 6, trait: 'C', text: 'I pay deep attention to minor nuances, operational details, and execution structures.', reverse: false },
+        
+        // Extraversion
+        { id: 7, trait: 'E', text: 'I easily find myself comfortable guiding conversations and feeling dynamic in group settings.', reverse: false },
+        { id: 8, trait: 'E', text: 'I prefer fading into the background of social gatherings or workspace collaborations.', reverse: true },
+        { id: 9, trait: 'E', text: 'I draw noticeable energy from engaging proactively with new external audiences.', reverse: false },
+        
+        // Agreeableness
+        { id: 10, trait: 'A', text: 'I easily sympathize and align with other people\'s emotional realities and needs.', reverse: false },
+        { id: 11, trait: 'A', text: 'I tend to express critical skepticism toward general human motivations or intentions.', reverse: true },
+        { id: 12, trait: 'A', text: 'I spend purposeful time ensuring others around me feel supported and integrated.', reverse: false },
+        
+        // Neuroticism
+        { id: 13, trait: 'N', text: 'I become easily stressed out, anxious, or fundamentally agitated by sudden changes.', reverse: false },
+        { id: 14, trait: 'N', text: 'I remain anchored, calm, and highly stable throughout crises or intense friction.', reverse: true },
+        { id: 15, trait: 'N', text: 'I encounter frequent mood variances or emotional overthinking under pressure.', reverse: false }
+    ];
+
+    const traitMetadata = {
+        'O': { name: 'Openness to Experience', desc: 'Reflects structural curiosity, imagination, intellectual scope, and creative preference.' },
+        'C': { name: 'Conscientiousness', desc: 'Measures organized reliability, precision, structural target awareness, and self-discipline.' },
+        'E': { name: 'Extraversion', desc: 'Indicates preference for active human engagement, dynamic settings, assertiveness, and social energy.' },
+        'A': { name: 'Agreeableness', desc: 'Measures human empathy, cooperative team focus, altruism, and general social trust levels.' },
+        'N': { name: 'Neuroticism (Emotional Reactivity)', desc: 'Identifies the candidate\'s structural sensitivity to stress, emotional shifts, or external pressure triggers.' }
+    };
+
+    function startAssessment() {
+        const name = document.getElementById('candidate-name').value.trim();
+        const age = document.getElementById('candidate-age').value.trim();
+        
+        if(!name || !age) {
+            alert('Please complete the fundamental configuration inputs to begin.');
+            return;
+        }
+
+        renderQuestions();
+        switchSection('step-quiz');
+    }
+
+    function renderQuestions() {
+        const target = document.getElementById('questions-target');
+        target.innerHTML = '';
+
+        questions.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            
+            card.innerHTML = `
+                <div class="question-text">${idx + 1}. ${q.text}</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q-${q.id}" value="1" required> Strongly Disagree</label>
+                    <label class="option-label"><input type="radio" name="q-${q.id}" value="2"> Disagree</label>
+                    <label class="option-label"><input type="radio" name="q-${q.id}" value="3"> Neutral</label>
+                    <label class="option-label"><input type="radio" name="q-${q.id}" value="4"> Agree</label>
+                    <label class="option-label"><input type="radio" name="q-${q.id}" value="5"> Strongly Agree</label>
+                </div>
+            `;
+            target.appendChild(card);
+        });
+    }
+
+    function processResults() {
+        const form = document.getElementById('quiz-form');
+        if (!form.checkValidity()) {
+            alert('Please provide responses for all questions before requesting your instant score.');
+            return;
+        }
+
+        // Aggregate scores per trait vector
+        let scores = { O: { total: 0, count: 0 }, C: { total: 0, count: 0 }, E: { total: 0, count: 0 }, A: { total: 0, count: 0 }, N: { total: 0, count: 0 } };
+
+        questions.forEach(q => {
+            const selectedVal = parseInt(document.querySelector(`input[name="q-${q.id}"]:checked`).value);
+            let absoluteScore = q.reverse ? (6 - selectedVal) : selectedVal;
+
+            scores[q.trait].total += absoluteScore;
+            scores[q.trait].count += 1;
+        });
+
+        // Set candidate metadata to view
+        document.getElementById('res-name').innerText = document.getElementById('candidate-name').value;
+        document.getElementById('res-age').innerText = document.getElementById('candidate-age').value;
+        document.getElementById('res-gender').innerText = document.getElementById('candidate-gender').value;
+        document.getElementById('res-occupation').innerText = document.getElementById('candidate-occupation').value || 'Unspecified';
+
+        // Render evaluation visuals
+        const resultsTarget = document.getElementById('results-target');
+        resultsTarget.innerHTML = '';
+
+        Object.keys(scores).forEach(traitKey => {
+            const data = scores[traitKey];
+            // Normalize scale dynamically to percentage values
+            const maxPossible = data.count * 5;
+            const percentage = Math.round((data.total / maxPossible) * 100);
+            const meta = traitMetadata[traitKey];
+
+            const traitMarkup = document.createElement('div');
+            traitMarkup.className = 'trait-result';
+            traitMarkup.innerHTML = `
+                <div class="trait-header">
+                    <span>${meta.name}</span>
+                    <span>${percentage}%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="bar-${traitKey}"></div>
+                </div>
+                <div class="trait-description">${meta.desc}</div>
+            `;
+            resultsTarget.appendChild(traitMarkup);
+
+            // Animate progress indicators cleanly
+            setTimeout(() => {
+                const element = document.getElementById(`bar-${traitKey}`);
+                if(element) element.style.width = `${percentage}%`;
+            }, 100);
+        });
+
+        switchSection('step-results');
+    }
+
+    function switchSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+                  </html>
+                  
