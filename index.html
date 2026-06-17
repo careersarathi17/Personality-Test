@@ -76,7 +76,7 @@
             color: var(--text-main);
         }
 
-        input[type="text"], input[type="number"], select {
+        input[type="text"], input[type="number"], input[type="tel"], select {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--border);
@@ -232,8 +232,12 @@
             <input type="text" id="candidate-name" placeholder="John Doe" required>
         </div>
         <div class="form-group">
-            <label for="candidate-age">Age</label>
-            <input type="number" id="candidate-age" placeholder="25" min="1" required>
+            <label for="candidate-grade">Grade / Standard</label>
+            <input type="text" id="candidate-grade" placeholder="e.g., 10th Standard / Grade 11" required>
+        </div>
+        <div class="form-group">
+            <label for="candidate-mobile">Mobile No.</label>
+            <input type="tel" id="candidate-mobile" placeholder="e.g., +1 234 567 8900" required>
         </div>
         <div class="form-group">
             <label for="candidate-gender">Gender</label>
@@ -246,7 +250,7 @@
         </div>
         <div class="form-group">
             <label for="candidate-occupation">Occupation / Target Role</label>
-            <input type="text" id="candidate-occupation" placeholder="Software Engineer / Applicant" required>
+            <input type="text" id="candidate-occupation" placeholder="Student / Applicant" required>
         </div>
         <button class="btn" onclick="startAssessment()">Start Assessment</button>
     </div>
@@ -264,7 +268,8 @@
         <h2>Assessment Report</h2>
         <div class="candidate-meta">
             <div><strong>Candidate Name:</strong> <span id="res-name"></span></div>
-            <div><strong>Age:</strong> <span id="res-age"></span></div>
+            <div><strong>Grade / Standard:</strong> <span id="res-grade"></span></div>
+            <div><strong>Mobile No.:</strong> <span id="res-mobile"></span></div>
             <div><strong>Gender:</strong> <span id="res-gender"></span></div>
             <div><strong>Occupation/Role:</strong> <span id="res-occupation"></span></div>
         </div>
@@ -315,10 +320,11 @@
 
     function startAssessment() {
         const name = document.getElementById('candidate-name').value.trim();
-        const age = document.getElementById('candidate-age').value.trim();
+        const grade = document.getElementById('candidate-grade').value.trim();
+        const mobile = document.getElementById('candidate-mobile').value.trim();
         
-        if(!name || !age) {
-            alert('Please complete the fundamental configuration inputs to begin.');
+        if(!name || !grade || !mobile) {
+            alert('Please complete all the configuration inputs to begin.');
             return;
         }
 
@@ -368,7 +374,8 @@
 
         // Set candidate metadata to view
         document.getElementById('res-name').innerText = document.getElementById('candidate-name').value;
-        document.getElementById('res-age').innerText = document.getElementById('candidate-age').value;
+        document.getElementById('res-grade').innerText = document.getElementById('candidate-grade').value;
+        document.getElementById('res-mobile').innerText = document.getElementById('candidate-mobile').value;
         document.getElementById('res-gender').innerText = document.getElementById('candidate-gender').value;
         document.getElementById('res-occupation').innerText = document.getElementById('candidate-occupation').value || 'Unspecified';
 
@@ -415,5 +422,4 @@
 </script>
 
 </body>
-                  </html>
-                  
+</html>
